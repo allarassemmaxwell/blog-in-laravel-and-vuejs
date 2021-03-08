@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('passwordResetCode')->nullable();
             $table->boolean('activationCode')->nullable();
             $table->boolean('socialType')->nullable();
+            $table->boolean('role_id')->default(0);
             $table->timestamps();
         });
     }

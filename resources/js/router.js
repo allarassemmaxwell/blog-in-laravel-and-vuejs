@@ -5,19 +5,57 @@ import newRoute from './components/pages/newRoutePage.vue'
 import hooks from './components/pages/basic/hooks.vue'
 import methods from './components/pages/basic/methods.vue'
 
-// PORJECT PAGES
-import home from './components/pages/home.vue'
-import tags from './components/pages/tags.vue'
+// ADMIN PORJECT PAGES
+import home from './components/pages/home'
+import tags from './admin/pages/tags'
+import category from './admin/pages/category'
+import usecom from './vuex/usecom'
+import adminuser from './admin/pages/adminusers'
+import login from './admin/pages/login'
+import role from './admin/pages/role'
+import assignRole from './admin/pages/assignRole'
 
 Vue.use(Router)
 const routes = [
     {
+        path: '/testvuex',
+        component: usecom
+    },
+    {
         path: '/',
-        component: home
+        component: home,
+        name: 'home'
     },
     {
         path: '/tags',
-        component: tags
+        component: tags,
+        name: 'tags'
+    },
+    {
+        path: '/category',
+        component: category,
+        name: 'category'
+    },
+    {
+        path: '/adminusers',
+        component: adminuser,
+        name: 'adminusers'
+    },
+    {
+        path: '/login',
+        component: login,
+        name: 'login'
+    },
+
+    {
+        path: '/role',
+        component: role,
+        name: 'role'
+    },
+    {
+        path: '/assignRole',
+        component: assignRole,
+        name: 'assignRole'
     },
 
 
