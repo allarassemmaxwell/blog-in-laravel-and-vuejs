@@ -1,13 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Tag;
+use App\Blog;
+use App\Blogcategory;
+use App\Blogtag;
 use App\Category;
-use App\User;
 use App\Role;
+use App\Tag;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Str;
 class AdminController extends Controller
 {
     // ADD TAG
@@ -42,7 +45,7 @@ class AdminController extends Controller
             }
         }
         if ($hasPermission) return view('welcome');
-        
+
         return view('notfound');
     }
     // LOG OUT
@@ -257,5 +260,87 @@ class AdminController extends Controller
         Role::where('id', $request->id)->update([
             'permission' => $request->permission
         ]);
+    }
+
+
+
+    // ASSIGN ROLE
+    public function uploadEditorImage(Request $request) {
+        $this->validate($request, [
+            'image' => 'required|mimes:jpeg,jpg,png'
+        ]);
+        $picName = time().'.'.$request->image->extension();
+        $request->image->move(public_path('uploads'), $picName);
+        return response()->json([
+            'success' => 1,
+            'file' => [
+                'url' => 'http://127.0.0.1:8000/uploads/$picName'
+            ]
+        ]);
+        // return $picName;
+    }
+
+
+    // START GENERATING UNIQUE SLUG
+    public function slug() {
+        $title = 'This is a nice title changed';
+        $slug = $this->setSlugAttribute($title);
+        return Blog::create([
+            'title' => $title,
+            'post' => 'some post',
+            'post_excerpt' => 'aead',
+            'slug' => $slug,
+            'user_id' => 1,
+            'metaDescription' => 'aead',
+        ]);
+        return $title;
+    }
+
+    public function setSlugAttribute($title){
+        return $this->uniqueSlug($title);
+    }
+
+    private function uniqueSlug($title){
+        $slug = Str::slug($title, '-');
+        $count = Blog::where('slug', 'LIKE', "{$slug}%")->count();
+        $newCount = $count > 0 ? ++$count : '';
+        return $newCount > 0 ? "$slug-$newCount" : $slug;
+    }
+    // END OF GENERATING UNIQUE SLUG
+
+
+    // CREATE BLOG
+    public function createBlog(Request $request) {
+        $categories = $request->category_id;
+        $tags = $request->tag_id;
+        $blogCategories = [];
+        $blogTags = [];
+        DB::beginTransaction();
+        try {
+            $blog = Blog::create([
+                'title' => $request->title,
+                'post'  => $request->post,
+                'post_excerpt' => $request->post_excerpt,
+                'user_id' => Auth::user()->id,
+                'metaDescription' => $request->metaDescription,
+                'jsonData' => $request->jsonData
+            ]);
+            // INSERT BOG CATEGORIES
+            foreach($categories as $c) {
+                array_push($blogCategories, ['category_id' => $c, 'blog_id' => $blog->id]);
+            }
+            $Blogcategory::insert($blogCategories);
+            // INSERT BLOG ID
+            foreach($tags as $t) {
+                array_push($blogTags, ['tag_id' => $t, 'blog_id' => $blog->id]);
+            }
+            $Blogtag::insert($blogTags);
+            DB::comit();
+            return 'done';
+        } catch(\Throwable $th) {
+            BD::rollback();
+            return 'Not done';
+        }
+        
     }
 }

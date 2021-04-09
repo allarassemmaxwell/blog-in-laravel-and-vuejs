@@ -55,20 +55,23 @@ export default {
             isSending: false,
             roles: [],
             resources: [
+                {resourceName: 'Home', read:false, write:false, update:false, delete:false, name:'/'},
                 {resourceName: 'Tags', read:false, write:false, update:false, delete:false, name:'tags'},
                 {resourceName: 'Category', read:false, write:false, update:false, delete:false, name:'category'},
+                {resourceName: 'Create Blog', read:false, write:false, update:false, delete:false, name:'createBlog'},
                 {resourceName: 'Admin Users', read:false, write:false, update:false, delete:false, name:'adminusers'},
                 {resourceName: 'Role', read:false, write:false, update:false, delete:false, name:'role'},
                 {resourceName: 'Assign Role', read:false, write:false, update:false, delete:false, name:'assignRole'},
-                {resourceName: 'Home', read:false, write:false, update:false, delete:false, name:'/'},
             ],
             defaultResourcesPermission: [
+                {resourceName: 'Home', read:false, write:false, update:false, delete:false, name:'/'},
                 {resourceName: 'Tags', read:false, write:false, update:false, delete:false, name:'tags'},
                 {resourceName: 'Category', read:false, write:false, update:false, delete:false, name:'category'},
+                {resourceName: 'Create Blog', read:false, write:false, update:false, delete:false, name:'createBlog'},
                 {resourceName: 'Admin Users', read:false, write:false, update:false, delete:false, name:'adminusers'},
                 {resourceName: 'Role', read:false, write:false, update:false, delete:false, name:'role'},
                 {resourceName: 'Assign Role', read:false, write:false, update:false, delete:false, name:'assignRole'},
-                {resourceName: 'Home', read:false, write:false, update:false, delete:false, name:'/'},
+                
             ],
         }
     },
